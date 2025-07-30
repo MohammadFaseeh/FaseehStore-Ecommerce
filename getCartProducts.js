@@ -1,3 +1,5 @@
+import { updateCartValue } from "./updateCartValue";
+
 export const getCartProductFromLS = () => {
     // get cart Products from the local-storage which is in cartProductLS and store in variable cartProducts
     let cartProducts = localStorage.getItem("cartProductLS");
@@ -5,8 +7,11 @@ export const getCartProductFromLS = () => {
     if(!cartProducts){
         return[];
     }
-    // if have data Beacuse the data in JSON form so we parse cart products
+    // if have data beacuse the data in JSON form so we parse cart products
     cartProducts = JSON.parse(cartProducts);
+
+    // Now for the value updating in cart Button in navbar
+    updateCartValue(cartProducts);
 
     // Now return cart Product to where function getCartProductFromLS called
     return cartProducts;

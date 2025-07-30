@@ -1,41 +1,72 @@
 import { getCartProductFromLS } from "./getCartProducts";
+import { updateCartValue } from "./updateCartValue";
+
+getCartProductFromLS();
 
 export const addToCart = (event, id, stock) => {
   // Now for getting data from LocalStorage we call funtion
   let arrLocalStorageProduct = getCartProductFromLS();
 
   // Which card is selected by user based on ID
-  const currentCardElement = document.querySelector(`#card${id}`);
-  // console.log(currentCardElement);
+  const currentProdElem = document.querySelector(`#card${id}`);
+  // console.log(currentCardElem);
 
-  // Get the product quantity element
+  // Get the product quantity Element
   let productQuantity =
-    currentCardElement.querySelector(".productQuantity").innerText;
+    currentProdElem.querySelector(".productQuantity").innerText;
   //console.log(productQuantity);
 
-  // Get the product price element
-  let price = currentCardElement.querySelector(".productPrice").innerText;
+  // Get the product price Element
+  let price = currentProdElem.querySelector(".productPrice").innerText;
 
   // console.log(productQuantity, price);
 
   // Remove the currency symbol (`Rs`) from the product price.
   price = price.replace("Rs", "");
 
-// Calculate Total Price
-price = price * productQuantity;
+  // Handle Duplicate Values of existing Products
+  let existingProd = arrLocalStorageProduct.find(
+    (curProd) => curProd.id === id
+  );
 
-// change productQuantity from string to number
-productQuantity = Number(productQuantity);
+  // if find duplicate
+  if (existingProd) {
+    return false;
+  }
 
-// Create an object containing the product `id`, `quantity`, and updated `price`
-let updateCart = {id, productQuantity, price};
+  // If duplicate found and quantity is greater than 1, update the quantity and price of the existing item in the cart.
+  if (existingProd && productQuantity > 1) {
+    productQuantity = Number(existingProd.productQuantity) + Number(productQuantity);
+    price = Number(price * productQuantity);
+    // Create an object containing the product `id`, updated `quantity`, and updated `price`
+    let updateCart = { id, productQuantity, price };
 
-// Push the product object to the existing cart array
-arrLocalStorageProduct.push(updateCart);
+    // Map through the existing cart items and update the quantity and price of the matching product.
+    updateCart = arrLocalStorageProduct.map((curProd) => {
+      return curProd.id === id ? updateCart : curProd;
+    });
+    // Convert Cart Array to JSON and Store in Local Storage
+    localStorage.setItem(
+      "cartProductLS",
+      JSON.stringify(updateCart)
+    );
+  }
 
-// Convert Cart Array to JSON and Store in Local Storage
-localStorage.setItem("cartProductLS", JSON.stringify(arrLocalStorageProduct));
+  // Calculate Total Price
+  price = Number(price * productQuantity);
 
-// Now for the cart Button in navbar value updating
-updateCartValue(arrLocalStorageProduct);
+  // change productQuantity from string to number
+  productQuantity = Number(productQuantity);
+
+  // Create an object containing the product `id`, `quantity`, and updated `price`
+  let updateCart = { id, productQuantity, price };
+
+  // Push the product object to the existing cart array
+  arrLocalStorageProduct.push(updateCart);
+
+  // Convert Cart Array to JSON and Store in Local Storage
+  localStorage.setItem("cartProductLS", JSON.stringify(arrLocalStorageProduct));
+
+  // Now for the value updating in cart Button in navbar
+  updateCartValue(arrLocalStorageProduct);
 };
