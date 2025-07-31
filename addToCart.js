@@ -29,11 +29,6 @@ export const addToCart = (event, id, stock) => {
     (curProd) => curProd.id === id
   );
 
-  // if find duplicate
-  if (existingProd) {
-    return false;
-  }
-
   // If duplicate found and quantity is greater than 1, update the quantity and price of the existing item in the cart.
   if (existingProd && productQuantity > 1) {
     productQuantity = Number(existingProd.productQuantity) + Number(productQuantity);
@@ -50,6 +45,11 @@ export const addToCart = (event, id, stock) => {
       "cartProductLS",
       JSON.stringify(updateCart)
     );
+  }
+
+  // if find duplicate
+  if (existingProd) {
+    return false;
   }
 
   // Calculate Total Price
