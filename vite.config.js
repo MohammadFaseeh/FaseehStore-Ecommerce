@@ -9,7 +9,7 @@ export default defineConfig({
         about: resolve(__dirname, "about.html"), // Additional HTML pages
         contact: resolve(__dirname, "contact.html"),
         products: resolve(__dirname, "products.html"),
-        addToCart: resolve(__dirname, "addToCart.html"),
+        addToCart: resolve(__dirname, "addtocart.html"),
         // Add more entry points for other HTML files as needed
       },
     },
