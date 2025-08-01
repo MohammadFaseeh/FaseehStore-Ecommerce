@@ -1,8 +1,9 @@
 import products from "./api/products.json";
 import { fetchQuantityFromLS } from "./fetchQuantityFromCartLS";
 import { getCartProductFromLS } from "./getCartProducts";
-import { incrementdecrement } from "./incrementdecrement";
+import { incrementDecrement } from "./incrementdecrement";
 import { removeProductFromCart } from "./removeProductFromCart";
+import { updateCartProductTotal } from "./updateCartProductTotal";
 
 // Retrieve the array of products stored in localStorage
 let cartProducts = getCartProductFromLS();
@@ -26,7 +27,7 @@ const templateContainer = document.querySelector("#productCartTemplate");
 const showCartproducts = () => {
   // Loop through each filtered cart product and display it
   filteredProducts.forEach((curProd) => {
-    const { id, name, category, image, price, productQuantity } = curProd;
+    const { id, name, category, image, price, stock } = curProd;
     // Clone the template content
     const productClone = document.importNode(templateContainer.content, true);
 
@@ -55,7 +56,7 @@ const showCartproducts = () => {
     productClone
       .querySelector(".stockElement")
       .addEventListener("click", (event) => {
-        incrementdecrement(event, id, stock,price);
+        incrementDecrement(event, id, stock, price);
       });
 
     // Append the card to the container
@@ -63,3 +64,6 @@ const showCartproducts = () => {
   });
 };
 showCartproducts();
+
+// Now Calculating the total price of all products in the cart
+updateCartProductTotal();

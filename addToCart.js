@@ -1,4 +1,5 @@
 import { getCartProductFromLS } from "./getCartProducts";
+import { showToast } from "./showToast";
 import { updateCartValue } from "./updateCartValue";
 
 getCartProductFromLS();
@@ -40,11 +41,14 @@ export const addToCart = (event, id, stock) => {
     updateCart = arrLocalStorageProduct.map((curProd) => {
       return curProd.id === id ? updateCart : curProd;
     });
+    console.log(updateCart);
     // Convert Cart Array to JSON and Store in Local Storage
     localStorage.setItem(
       "cartProductLS",
       JSON.stringify(updateCart)
     );
+    // show toast when added product
+    showToast("add", id);
   }
 
   // if find duplicate
@@ -69,4 +73,7 @@ export const addToCart = (event, id, stock) => {
 
   // Now for the value updating in cart Button in navbar
   updateCartValue(arrLocalStorageProduct);
+  
+  // Show toast when product added to the cart
+  showToast("add", id);
 };
